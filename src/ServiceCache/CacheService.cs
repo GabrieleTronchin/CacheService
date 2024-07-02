@@ -99,12 +99,16 @@ public class CacheService : ICacheService
                 };
             var json = JsonConvert.SerializeObject(thing, serializerSettings);
 
-            //non awaitato per scelta, l'esecuzione deve essere parallela
+
+
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            //Not awaited by design
             SetAsync(
                 key,
                 Encoding.ASCII.GetBytes(json),
                 GetCacheExpirationOptions(expirationMinutes)
             );
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
             _logger.LogTrace(
                 string.Format(
@@ -116,14 +120,14 @@ public class CacheService : ICacheService
         }
         catch (Exception e)
         {
-            _logger.LogError($"An error occurred at {nameof(CreateAndSetAsync)}.", e);
+            _logger.LogError(e, $"An error occurred at {nameof(CreateAndSetAsync)}.");
             throw;
         }
 
         return thing;
     }
 
-    public async Task<T> GetOrDefault<T>(string key)
+    public async Task<T?> GetOrDefault<T>(string key)
     {
         var bytesResult = await GetAsync(key);
 
@@ -142,7 +146,7 @@ public class CacheService : ICacheService
             }
         }
 
-        return default(T);
+        return default;
     }
 
     public async Task<T> GetOrDefault<T>(string key, T defaultVal)
@@ -197,9 +201,8 @@ public class CacheService : ICacheService
         }
         catch (Exception e)
         {
-            _logger.LogError(
-                string.Format("An error occurred at {0}.", nameof(CreateAndSetAsync)),
-                e
+            _logger.LogError(e,
+                string.Format("An error occurred at {0}.", nameof(CreateAndSetAsync))
             );
             throw;
         }
@@ -243,7 +246,7 @@ public class CacheService : ICacheService
         }
         catch (Exception e)
         {
-            _logger.LogError($"An error occurred at {nameof(CreateAndSetAsync)}.", e);
+            _logger.LogError(e, $"An error occurred at {nameof(CreateAndSetAsync)}.");
             throw;
         }
 
@@ -273,7 +276,7 @@ public class CacheService : ICacheService
         }
         catch (Exception e)
         {
-            _logger.LogError($"An error occurred at {nameof(RemoveAsync)}.", e);
+            _logger.LogError(e, $"An error occurred at {nameof(RemoveAsync)}.");
             throw;
         }
     }
