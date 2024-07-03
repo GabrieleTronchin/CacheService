@@ -52,34 +52,10 @@ public class CacheService : ICacheService
         return await this.CreateAndSetAsync<T>(key, create, expirationMinutes);
     }
 
-    public async Task<T> GetOrCreateParallelAsync<T>(
-        string key,
-        Func<Task<T>> create,
-        int expirationMinutes = 0
-    )
-    {
-        var bytesResult = await GetAsync(key);
-
-        if (bytesResult?.Length > 0)
-        {
-            using StreamReader reader = new(new MemoryStream(bytesResult));
-            using JsonTextReader jsonReader = new(reader);
-            JsonSerializer ser = new();
-            ser.TypeNameHandling = TypeNameHandling.All;
-            ser.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
-
-            var result = ser.Deserialize<T>(jsonReader);
-            if (result != null)
-            {
-                return result;
-            }
-        }
-
-        return await this.CreateAndSetParalelAsync<T>(key, create, expirationMinutes);
-    }
 
 
-    public async Task<T?> GetOrDefault<T>(string key)
+
+    public async Task<T> GetOrDefault<T>(string key)
     {
         var bytesResult = await GetAsync(key);
 

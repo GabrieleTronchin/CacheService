@@ -23,14 +23,6 @@ app.MapGet("/GetOrCreateAsync/{key}", async (string key,ICacheService cache) =>
 .WithOpenApi();
 
 
-app.MapGet("/GetOrCreateParallelAsync/{key}", async (string key, ICacheService cache) =>
-{
-    return await cache.GetOrCreateParallelAsync(key, () => Task.FromResult($"{nameof(cache.GetOrCreateParallelAsync)} - Hello World"));
-})
-.WithName("GetOrCreateParallelAsync")
-.WithOpenApi();
-
-
 app.MapGet("/GetOrDefault/{key}", async (string key, ICacheService cache) =>
 {
     return await cache.GetOrDefault(key, $"{nameof(cache.GetOrDefault)} - Hello World");

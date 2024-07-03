@@ -30,15 +30,65 @@ namespace ServiceCache.Test
             _option.Setup(x => x.Value).Returns(new CacheOptions() { SlidingExpirationToNowInMinutes = 1 });
 
             var objectToTest = GetObjectToTest();
-            try
-            {
-                objectToTest.CreateAndSet(key, "A");
-            }
-            catch (Exception)
-            {
-                Assert.Fail("Cannot create cache");
-            }
-            //_distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>()), Times.Once);
+
+            objectToTest.CreateAndSet(key, "A");
+
+            _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(),It.IsAny<CancellationToken>()), Times.Once);
         }
+
+
+
+        [TestMethod]
+        [DataRow("TestKey")]
+        public async Task CreateAndSetAsync(string key)
+        {
+            _distributedCache.Reset();
+            _option.Reset();
+
+            _option.Setup(x => x.Value).Returns(new CacheOptions() { SlidingExpirationToNowInMinutes = 1 });
+
+            var objectToTest = GetObjectToTest();
+
+            await objectToTest.CreateAndSetAsync(key, () => Task.FromResult("A"));
+
+            _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        [TestMethod]
+        [DataRow("TestKey")]
+        public async Task RemoveAsync(string key)
+        {
+            _distributedCache.Reset();
+            _option.Reset();
+
+            _option.Setup(x => x.Value).Returns(new CacheOptions() { SlidingExpirationToNowInMinutes = 1 });
+
+            var objectToTest = GetObjectToTest();
+
+            await objectToTest.RemoveAsync(key);
+
+            _distributedCache.Verify(x => x.Remove(key), Times.Once);
+
+        }
+
+
+        [TestMethod]
+        [DataRow("TestKey")]
+        public async Task GetOrDefault(string key)
+        {
+            _distributedCache.Reset();
+            _option.Reset();
+
+            _option.Setup(x => x.Value).Returns(new CacheOptions() { SlidingExpirationToNowInMinutes = 1 });
+
+            var objectToTest = GetObjectToTest();
+
+            await objectToTest.GetOrDefault(key, () => Task.FromResult("A"));
+
+
+            _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+
+        }
+
     }
 }
