@@ -25,7 +25,7 @@ app.MapGet("/GetOrCreateAsync/{key}", async (string key,ICacheService cache) =>
 
 app.MapGet("/GetOrDefault/{key}", async (string key, ICacheService cache) =>
 {
-    return await cache.GetOrDefault(key, $"{nameof(cache.GetOrDefault)} - Hello World");
+    return await cache.GetOrDefaultAsync(key, $"{nameof(cache.GetOrDefault)} - Hello World");
 })
 .WithName("GetOrDefault")
 .WithOpenApi();

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,7 +8,6 @@ namespace ServiceCache;
 
 public class CacheService : ICacheService
 {
-    private static readonly SemaphoreSlim Locker = new SemaphoreSlim(1, 1);
     private readonly IDistributedCache _cache;
     private readonly ILogger<CacheService> _logger;
     private readonly CacheOptions _options;
@@ -31,7 +29,7 @@ public class CacheService : ICacheService
         int expirationMinutes = 0
     )
     {
-        var bytesResult = await GetAsync(key);
+        var bytesResult = await _cache.GetAsync(key);
 
         if (bytesResult?.Length > 0)
         {
@@ -57,7 +55,7 @@ public class CacheService : ICacheService
 
     public async Task<T> GetOrDefault<T>(string key)
     {
-        var bytesResult = await GetAsync(key);
+        var bytesResult = await _cache.GetAsync(key);
 
         if (bytesResult?.Length > 0)
         {
@@ -77,9 +75,9 @@ public class CacheService : ICacheService
         return default;
     }
 
-    public async Task<T> GetOrDefault<T>(string key, T defaultVal)
+    public async Task<T> GetOrDefaultAsync<T>(string key, T defaultVal)
     {
-        var bytesResult = await GetAsync(key);
+        var bytesResult = await _cache.GetAsync(key);
 
         if (bytesResult?.Length > 0)
         {
@@ -113,11 +111,7 @@ public class CacheService : ICacheService
 
             var json = JsonConvert.SerializeObject(thing, serializerSettings);
 
-            await SetAsync(
-                key,
-                Encoding.ASCII.GetBytes(json),
-                GetCacheExpirationOptions(expirationMinutes)
-            );
+            await _cache.SetAsync(key, Encoding.ASCII.GetBytes(json), GetCacheExpirationOptions(expirationMinutes));
 
             _logger.LogTrace(
                 string.Format(
@@ -145,7 +139,8 @@ public class CacheService : ICacheService
         T thing;
         try
         {
-            await Remove(key);
+            _cache.Remove(key);
+
             thing = await createAsync();
 
             JsonSerializerSettings serializerSettings =
@@ -158,11 +153,7 @@ public class CacheService : ICacheService
 
             var json = JsonConvert.SerializeObject(thing, serializerSettings);
 
-            await SetAsync(
-                key,
-                Encoding.ASCII.GetBytes(json),
-                GetCacheExpirationOptions(expirationMinutes)
-            );
+            await _cache.SetAsync(key, Encoding.ASCII.GetBytes(json), GetCacheExpirationOptions(expirationMinutes));
 
             _logger.LogTrace(
                 string.Format(
@@ -196,11 +187,12 @@ public class CacheService : ICacheService
     {
         try
         {
-            await Remove(key);
+            _cache.Remove(key);
 
             _logger.LogTrace(
                 string.Format("{0} - Item with key {1} removed to cache.", nameof(RemoveAsync), key)
             );
+
         }
         catch (Exception e)
         {
@@ -209,43 +201,4 @@ public class CacheService : ICacheService
         }
     }
 
-    private async Task<byte[]?> GetAsync(string key)
-    {
-        await Locker.WaitAsync();
-        try
-        {
-            var bytesResult = await _cache.GetAsync(key);
-            return bytesResult;
-        }
-        finally
-        {
-            Locker.Release();
-        }
-    }
-
-    private async Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options)
-    {
-        await Locker.WaitAsync();
-        try
-        {
-            await _cache.SetAsync(key, value, options);
-        }
-        finally
-        {
-            Locker.Release();
-        }
-    }
-
-    private async Task Remove(string key)
-    {
-        await Locker.WaitAsync();
-        try
-        {
-            _cache.Remove(key);
-        }
-        finally
-        {
-            Locker.Release();
-        }
-    }
 }

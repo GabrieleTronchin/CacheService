@@ -83,12 +83,32 @@ namespace ServiceCache.Test
 
             var objectToTest = GetObjectToTest();
 
-            await objectToTest.GetOrDefault(key, () => Task.FromResult("A"));
+            await objectToTest.GetOrDefaultAsync(key, () => Task.FromResult("A"));
 
 
             _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Never);
 
         }
+
+
+        [TestMethod]
+        [DataRow("TestKey")]
+        public async Task GetOrCreateAsync(string key)
+        {
+            _distributedCache.Reset();
+            _option.Reset();
+
+            _option.Setup(x => x.Value).Returns(new CacheOptions() { SlidingExpirationToNowInMinutes = 1 });
+
+            var objectToTest = GetObjectToTest();
+
+            await objectToTest.GetOrCreateAsync(key, () => Task.FromResult("A"));
+
+
+            _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+
+        }
+
 
     }
 }
