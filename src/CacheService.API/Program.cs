@@ -39,20 +39,11 @@ app.MapGet("/GetOrDefault/{key}", async (string key, ICacheService cache) =>
 .WithOpenApi();
 
 
-
 app.MapGet("/CreateAndSet/{key}", async (string key, ICacheService cache) =>
 {
     await cache.CreateAndSet(key, $"{nameof(cache.CreateAndSet)} - Hello World");
 })
 .WithName("CreateAndSet")
-.WithOpenApi();
-
-
-app.MapGet("/CreateAndSetParalelAsync/{key}", async (string key, ICacheService cache) =>
-{
-    await cache.CreateAndSetParalelAsync(key, async () => $"{nameof(cache.CreateAndSetParalelAsync)} - Hello World");
-})
-.WithName("CreateAndSetParalelAsync")
 .WithOpenApi();
 
 
@@ -63,12 +54,6 @@ app.MapDelete("/RemoveAsync", (string key, ICacheService cache) =>
 .WithName("RemoveAsync")
 .WithOpenApi();
 
-app.MapDelete("/ClearCache", (ICacheService cache) =>
-{
-    cache.ClearCache();
-})
-.WithName("ClearCache")
-.WithOpenApi();
 
 
 app.Run();

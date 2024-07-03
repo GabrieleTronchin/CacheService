@@ -78,54 +78,6 @@ public class CacheService : ICacheService
         return await this.CreateAndSetParalelAsync<T>(key, create, expirationMinutes);
     }
 
-    public async Task<T> CreateAndSetParalelAsync<T>(
-        string key,
-        Func<Task<T>> createAsync,
-        int expirationMinutes = 0
-    )
-    {
-        T thing;
-        try
-        {
-            await Remove(key);
-            thing = await createAsync();
-
-            JsonSerializerSettings serializerSettings =
-                new()
-                {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-                    TypeNameHandling = TypeNameHandling.All,
-                    StringEscapeHandling = StringEscapeHandling.EscapeNonAscii
-                };
-            var json = JsonConvert.SerializeObject(thing, serializerSettings);
-
-
-
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            //Not awaited by design
-            SetAsync(
-                key,
-                Encoding.ASCII.GetBytes(json),
-                GetCacheExpirationOptions(expirationMinutes)
-            );
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
-            _logger.LogTrace(
-                string.Format(
-                    "{0} - Item with key {1} added to cache.",
-                    nameof(CreateAndSetAsync),
-                    key
-                )
-            );
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, $"An error occurred at {nameof(CreateAndSetAsync)}.");
-            throw;
-        }
-
-        return thing;
-    }
 
     public async Task<T?> GetOrDefault<T>(string key)
     {
@@ -279,22 +231,6 @@ public class CacheService : ICacheService
             _logger.LogError(e, $"An error occurred at {nameof(RemoveAsync)}.");
             throw;
         }
-    }
-
-    public void ClearCache()
-    {
-        // Not tested code
-        PropertyInfo? prop = _cache
-            .GetType()
-            .GetProperty(
-                "EntriesCollection",
-                BindingFlags.Instance | BindingFlags.GetProperty | BindingFlags.Public
-            );
-        object? secretCache = prop?.GetValue(_cache);
-        MethodInfo? clearMethod = secretCache
-            ?.GetType()
-            .GetMethod("Clear", BindingFlags.Instance | BindingFlags.Public);
-        clearMethod?.Invoke(secretCache, null);
     }
 
     private async Task<byte[]?> GetAsync(string key)
