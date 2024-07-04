@@ -1,15 +1,26 @@
 
-version: "3.2"
+version: '3'
+
 services:
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: "rabbitmq"
+
+  redis-monitoring:
+    image: redislabs/redisinsight:latest
+    pull_policy: always
     ports:
-      - 5672:5672
-      - 15672:15672
-    networks:
-      - rabbitmq
+      - '8001:8001'
     restart: unless-stopped
+    networks:
+          - default
+
+  redis:  
+    image: redis:latest
+    pull_policy: always
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - default
+
 networks:
-  rabbitmq:
+  default:
     driver: bridge
