@@ -15,9 +15,9 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.MapGet("/GetOrCreateAsync/{key}", async (string key,ICacheService cache) =>
+app.MapGet("/GetOrCreateAsync/{key}", async (string key, ICacheService cache) =>
 {
-   return await cache.GetOrCreateAsync(key, () => Task.FromResult($"{nameof(cache.GetOrCreateAsync)} - Hello World"));
+    return await cache.GetOrCreateAsync(key, () => Task.FromResult($"{nameof(cache.GetOrCreateAsync)} - Hello World"));
 })
 .WithName("GetOrCreateAsync")
 .WithOpenApi();

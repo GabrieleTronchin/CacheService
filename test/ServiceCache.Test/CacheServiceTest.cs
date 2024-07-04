@@ -33,7 +33,7 @@ namespace ServiceCache.Test
 
             objectToTest.CreateAndSet(key, "A");
 
-            _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(),It.IsAny<CancellationToken>()), Times.Once);
+            _distributedCache.Verify(x => x.SetAsync(key, It.IsAny<byte[]>(), It.IsAny<DistributedCacheEntryOptions>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
 

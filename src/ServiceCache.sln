@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceCache.Test", "..\tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{3019A5F7-1903-4DA5-A016-1CED00A54B10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheService.API", "CacheService.API\CacheService.API.csproj", "{38CE24BD-0AD9-424D-9D85-68AA12ABDC56}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheService.API", "CacheService.API\CacheService.API.csproj", "{38CE24BD-0AD9-424D-9D85-68AA12ABDC56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheService.ConsoleApp", "CacheService.ConsoleApp\CacheService.ConsoleApp.csproj", "{B8AC0B37-62CC-4196-ADF0-C3AFE86B55BB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{38CE24BD-0AD9-424D-9D85-68AA12ABDC56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38CE24BD-0AD9-424D-9D85-68AA12ABDC56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38CE24BD-0AD9-424D-9D85-68AA12ABDC56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8AC0B37-62CC-4196-ADF0-C3AFE86B55BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8AC0B37-62CC-4196-ADF0-C3AFE86B55BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8AC0B37-62CC-4196-ADF0-C3AFE86B55BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8AC0B37-62CC-4196-ADF0-C3AFE86B55BB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
