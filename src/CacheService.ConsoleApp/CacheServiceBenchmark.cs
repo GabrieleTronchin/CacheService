@@ -7,7 +7,7 @@ namespace CacheService.ConsoleApp;
 
 public class CacheServiceBenchmark
 {
-    private const string FILE_NAME = "commeddia.txt";
+    private const string FILE_NAME = "commedia.txt";
     private readonly string bigObject;
     private readonly string smallObjectKey;
     private readonly string bigObjectKey;
