@@ -44,4 +44,10 @@
     <ProjectReference Include="..\ServiceCache\ServiceCache.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="commedia.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

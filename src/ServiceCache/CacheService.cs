@@ -50,9 +50,6 @@ public class CacheService : ICacheService
         return await this.CreateAndSetAsync<T>(key, create, expirationMinutes);
     }
 
-
-
-
     public async Task<T> GetOrDefault<T>(string key)
     {
         var bytesResult = await _cache.GetAsync(key);
@@ -111,7 +108,11 @@ public class CacheService : ICacheService
 
             var json = JsonConvert.SerializeObject(thing, serializerSettings);
 
-            await _cache.SetAsync(key, Encoding.ASCII.GetBytes(json), GetCacheExpirationOptions(expirationMinutes));
+            await _cache.SetAsync(
+                key,
+                Encoding.ASCII.GetBytes(json),
+                GetCacheExpirationOptions(expirationMinutes)
+            );
 
             _logger.LogTrace(
                 string.Format(
@@ -123,7 +124,8 @@ public class CacheService : ICacheService
         }
         catch (Exception e)
         {
-            _logger.LogError(e,
+            _logger.LogError(
+                e,
                 string.Format("An error occurred at {0}.", nameof(CreateAndSetAsync))
             );
             throw;
@@ -153,7 +155,11 @@ public class CacheService : ICacheService
 
             var json = JsonConvert.SerializeObject(thing, serializerSettings);
 
-            await _cache.SetAsync(key, Encoding.ASCII.GetBytes(json), GetCacheExpirationOptions(expirationMinutes));
+            await _cache.SetAsync(
+                key,
+                Encoding.ASCII.GetBytes(json),
+                GetCacheExpirationOptions(expirationMinutes)
+            );
 
             _logger.LogTrace(
                 string.Format(
@@ -192,7 +198,6 @@ public class CacheService : ICacheService
             _logger.LogTrace(
                 string.Format("{0} - Item with key {1} removed to cache.", nameof(RemoveAsync), key)
             );
-
         }
         catch (Exception e)
         {
@@ -200,5 +205,4 @@ public class CacheService : ICacheService
             throw;
         }
     }
-
 }

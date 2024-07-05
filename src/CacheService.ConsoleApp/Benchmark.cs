@@ -1,12 +1,9 @@
 ﻿namespace CacheService.ConsoleApp;
 
-
 public class Benchmark
 {
-
     public async Task Execute()
     {
-
         var cacheBanchmark = new CacheServiceBenchmark();
 
         await cacheBanchmark.AddSmallObject();
@@ -17,6 +14,4 @@ public class Benchmark
 
         await cacheBanchmark.GetBigObject();
     }
-
-
 }
