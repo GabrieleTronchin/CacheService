@@ -4,14 +4,14 @@ public class Benchmark
 {
     public async Task Execute()
     {
-        var cacheBanchmark = new CacheServiceBenchmark();
+        var cacheBenchmark = new CacheServiceBenchmark();
 
-        await cacheBanchmark.AddSmallObject();
+        await cacheBenchmark.AddSmallObject();
 
-        await cacheBanchmark.GetSmallObject();
+        await cacheBenchmark.GetSmallObject();
 
-        await cacheBanchmark.AddBigObject();
+        await cacheBenchmark.AddBigObject();
 
-        await cacheBanchmark.GetBigObject();
+        await cacheBenchmark.GetBigObject();
     }
 }
