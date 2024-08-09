@@ -12,7 +12,7 @@ public class CacheServiceBenchmark
     private readonly string smallObjectKey;
     private readonly string bigObjectKey;
 
-    //[Params("redis", "garnet")]
+    [Params("redis", "garnet")]
     public string ConfigurationFile { get; set; } = "redis";
 
     private ICacheService GetCacheService()
