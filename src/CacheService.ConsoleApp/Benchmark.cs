@@ -4,7 +4,7 @@ public class Benchmark
 {
     public async Task Execute()
     {
-        var cacheBenchmark = new CacheServiceBenchmark();
+        CacheServiceBenchmark cacheBenchmark = new();
 
         await cacheBenchmark.AddSmallObject();
 

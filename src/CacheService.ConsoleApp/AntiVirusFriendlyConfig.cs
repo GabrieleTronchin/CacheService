@@ -9,6 +9,8 @@ public class AntiVirusFriendlyConfig : ManualConfig
     public AntiVirusFriendlyConfig()
     {
         AddJob(Job.MediumRun
+            .WithWarmupCount(1)
+            .WithIterationCount(1)
             .WithToolchain(InProcessNoEmitToolchain.Instance));
     }
 }
