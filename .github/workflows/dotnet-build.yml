@@ -33,4 +33,4 @@ jobs:
         run: dotnet pack --configuration Release $TARGET_PROJECT
 
       - name: Publish the package to GPR
-        run: dotnet nuget push ./src/ServiceCache/bin/Release/*.nupkg
+        run: dotnet nuget push ./src/ServiceCache/bin/Release/*.nupkg -k ${{ secrets.G_TOKEN }} -s https://nuget.pkg.github.com/GabrieleTronchin/index.json
