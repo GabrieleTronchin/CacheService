@@ -29,6 +29,12 @@ jobs:
       - name: Build
         run: dotnet build $TARGET_PROJECT
 
+      - name: Install dependencies
+        run: dotnet restore $TARGET_TEST_PROJECT
+
+      - name: Test with dotnet
+        run: dotnet test $TARGET_TEST_PROJECT
+        
       - name: Create the package
         run: dotnet pack --configuration Release $TARGET_PROJECT
 
