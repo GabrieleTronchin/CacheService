@@ -3,8 +3,10 @@ name: dotnet package
 on: [push]
 
 env:
-  TARGET_PROJECT: ./src/ServiceCache/ServiceCache.csproj
-  TARGET_TEST_PROJECT: ./test/ServiceCache.Test/ServiceCache.Test.csproj
+  PROJECT_FOLDER: ./src/ServiceCache
+  TEST_PROJECT: ./test/ServiceCache.Test/ServiceCache.Test.csproj
+  PROJECT: ServiceCache.csproj
+  NUGET_REPO_URL: https://nuget.pkg.github.com/GabrieleTronchin/index.json
 
 
 jobs:
@@ -23,20 +25,20 @@ jobs:
           dotnet-version: | 
             8.0.x
 
-      - name: Install dependencies
-        run: dotnet restore $TARGET_PROJECT
+      - name: Install Dependencies
+        run: dotnet restore $PROJECT_FOLDER/$PROJECT
 
-      - name: Build
-        run: dotnet build $TARGET_PROJECT
+      - name: Build Project
+        run: dotnet build $PROJECT_FOLDER/$PROJECT
 
-      - name: Install dependencies
-        run: dotnet restore $TARGET_TEST_PROJECT
+      - name: Install Test Project Dependencies
+        run: dotnet restore $TEST_PROJECT
 
       - name: Test with dotnet
-        run: dotnet test $TARGET_TEST_PROJECT
-        
-      - name: Create the package
-        run: dotnet pack --configuration Release $TARGET_PROJECT
+        run: dotnet test $TEST_PROJECT
 
-      - name: Publish the package to GPR
-        run: dotnet nuget push ./src/ServiceCache/bin/Release/*.nupkg -k ${{ secrets.G_TOKEN }} -s https://nuget.pkg.github.com/GabrieleTronchin/index.json
+      - name: Create the package
+        run: dotnet pack --configuration Release $PROJECT_FOLDER/$PROJECT
+
+      - name: Publish the package to Rository
+        run: dotnet nuget push $PROJECT_FOLDER/bin/Release/*.nupkg -k ${{ secrets.G_TOKEN }} -s $NUGET_REPO_URL
