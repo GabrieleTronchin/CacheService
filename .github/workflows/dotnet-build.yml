@@ -4,7 +4,6 @@ on: [push]
 
 env:
   TARGET_PROJECT: ./src/ServiceCache/ServiceCache.csproj
-  PKG_DEST_FOLDER: ./src/ServiceCache/bin/Release/*.nupkg
   TARGET_TEST_PROJECT: ./test/ServiceCache.Test/ServiceCache.Test.csproj
 
 
@@ -34,4 +33,4 @@ jobs:
         run: dotnet pack --configuration Release $TARGET_PROJECT
 
       - name: Publish the package to GPR
-        run: dotnet nuget push $PKG_DEST_FOLDER
+        run: dotnet nuget push ./src/ServiceCache/bin/Release/*.nupkg
