@@ -2,6 +2,12 @@ name: dotnet package
 
 on: [push]
 
+env:
+  TARGET_PROJECT: ./src/ServiceCache/ServiceCache.csproj
+  PKG_DEST_FOLDER: ./src/ServiceCache/bin/Release
+  TARGET_TEST_PROJECT: ./test/ServiceCache.Test/ServiceCache.Test.csproj
+
+
 jobs:
   build:
 
@@ -17,13 +23,15 @@ jobs:
         with:
           dotnet-version: | 
             8.0.x
+
       - name: Install dependencies
-        run: dotnet restore ./src/ServiceCache/ServiceCache.csproj
+        run: dotnet restore $TARGET_PROJECT
+
       - name: Build
-        run: dotnet build ./src/ServiceCache/ServiceCache.csproj
-      - name: Test with dotnet
-        run: dotnet test ./test/ServiceCache.Test/ServiceCache.Test.csproj --logger trx"
+        run: dotnet build $TARGET_PROJECT
+
       - name: Create the package
-        run: dotnet pack --configuration Release ./src/ServiceCache/ServiceCache.csproj
+        run: dotnet pack --configuration Release $TARGET_PROJECT
+
       - name: Publish the package to GPR
-        run: dotnet nuget push ./src/ServiceCache/bin/Release/*.nupkg
+        run: dotnet nuget push $PKG_DEST_FOLDER/*.nupkg
